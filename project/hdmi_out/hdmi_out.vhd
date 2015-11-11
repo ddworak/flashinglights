@@ -156,7 +156,7 @@ process(clk_x2)
       end if;
    end process;
 
-   -- The Seraialisers
+   -- The Serialisers
 output_serializer_r: output_serializer PORT MAP(clk_load => clk_x2, clk_output => clk_x10, strobe => serdes_strobe, ser_data => ser_in_red,   ser_output => red_s);
 output_serializer_g: output_serializer PORT MAP(clk_load => clk_x2, clk_output => clk_x10, strobe => serdes_strobe, ser_data => ser_in_green, ser_output => green_s);
 output_serializer_b: output_serializer PORT MAP(clk_load => clk_x2, clk_output => clk_x10, strobe => serdes_strobe, ser_data => ser_in_blue,  ser_output => blue_s);

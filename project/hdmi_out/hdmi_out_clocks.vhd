@@ -50,7 +50,7 @@ begin
    clk_x2  <= clock_local_x2;
    clk_x10 <= clock_local_x10;
    
-   -- Multiply clk50m by 10, then :
+   -- Multiply clk_pixel by 10, then :
    -- * divide by 1 for the bit clock (pixel clock x10)
    -- * divide by 5 for the pixel clock x2 
    -- * divide by 10 for the pixel clock

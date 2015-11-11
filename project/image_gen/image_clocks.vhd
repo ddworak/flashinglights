@@ -30,7 +30,7 @@ architecture Behavioral of image_clocks is
 begin
    pixel_clock     <= clock_x1;
    
-   -- Multiply clk50m by 15, then divide by 10 for the 75 MHz pixel clock
+   -- Multiply clk50 by 15, then divide by 10 for the 75 MHz pixel clock
    -- Because the all come from the same PLL the will all be in phase 
    PLL_BASE_inst : PLL_BASE
    generic map (
