@@ -19,14 +19,14 @@ NET "leds<7>" LOC="P7"  | IOSTANDARD=LVTTL | DRIVE=8 | SLEW=SLOW;
 #NET "sw<4>"   LOC="L5" | IOSTANDARD=LVTTL | PULLUP;
 
 # HDMI output
-#NET "hdmi_out_p<0>" LOC="C13" | IOSTANDARD="TMDS_33"; # IO_L63P_SCP7_0
-#NET "hdmi_out_n<0>" LOC="A13" | IOSTANDARD="TMDS_33"; # IO_L63N_SCP6_0
-#NET "hdmi_out_p<1>" LOC="B12" | IOSTANDARD="TMDS_33"; # IO_L62P_0
-#NET "hdmi_out_n<1>" LOC="A12" | IOSTANDARD="TMDS_33"; # IO_L62N_VREF_0
-#NET "hdmi_out_p<2>" LOC="C11" | IOSTANDARD="TMDS_33"; # IO_L39P_0
-#NET "hdmi_out_n<2>" LOC="A11" | IOSTANDARD="TMDS_33"; # IO_L39N_0
-#NET "hdmi_out_p<3>" LOC="B14" | IOSTANDARD="TMDS_33"; # IO_L65P_SCP3_0
-#NET "hdmi_out_n<3>" LOC="A14" | IOSTANDARD="TMDS_33"; # IO_L65N_SCP2_0
+NET "hdmi_out_p<0>" LOC="C13" | IOSTANDARD="TMDS_33"; # IO_L63P_SCP7_0
+NET "hdmi_out_n<0>" LOC="A13" | IOSTANDARD="TMDS_33"; # IO_L63N_SCP6_0
+NET "hdmi_out_p<1>" LOC="B12" | IOSTANDARD="TMDS_33"; # IO_L62P_0
+NET "hdmi_out_n<1>" LOC="A12" | IOSTANDARD="TMDS_33"; # IO_L62N_VREF_0
+NET "hdmi_out_p<2>" LOC="C11" | IOSTANDARD="TMDS_33"; # IO_L39P_0
+NET "hdmi_out_n<2>" LOC="A11" | IOSTANDARD="TMDS_33"; # IO_L39N_0
+NET "hdmi_out_p<3>" LOC="B14" | IOSTANDARD="TMDS_33"; # IO_L65P_SCP3_0
+NET "hdmi_out_n<3>" LOC="A14" | IOSTANDARD="TMDS_33"; # IO_L65N_SCP2_0
 
 
 # HDMI input

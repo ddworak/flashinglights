@@ -27,6 +27,8 @@
 *.ut
 *.xpi
 *.xst
+*.pwr
+*.log
 *_bitgen.xwbt
 *_envsettings.html
 *_map.map
@@ -46,8 +48,7 @@
 *.gise
 par_usage_statistics.html
 usage_statistics_webtalk.html
-webtalk.log
-webtalk_pn.xml
+webtalk*
 
 # generated folders
 iseconfig/
@@ -55,7 +56,7 @@ xlnx_auto_0_xdb/
 xst/
 _ngo/
 _xmsgs/
-
+netgen/
 *~
 
 # KDE directory preferences
