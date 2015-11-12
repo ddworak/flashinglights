@@ -28,9 +28,10 @@ begin
    clk0   <= clk_output;
    clk1   <= '0';
    
+--todo
 OSERDES2_master : OSERDES2
    generic map (
-      BYPASS_GCLK_FF => FALSE,       -- Bypass CLKDIV syncronization registers (TRUE/FALSE)
+      BYPASS_GCLK_FF => FALSE,       -- Bypass CLKDIV syncronization registers
       DATA_RATE_OQ => "SDR",         -- Output Data Rate ("SDR" or "DDR")
       DATA_RATE_OT => "SDR",         -- 3-state Data Rate ("SDR" or "DDR")
       DATA_WIDTH => 5,               -- Parallel data width (2-8)
@@ -68,9 +69,10 @@ OSERDES2_master : OSERDES2
       TRAIN    => '0'        -- 1-bit input: Training pattern enable input
    );
 
+--todo
 OSERDES2_slave : OSERDES2
    generic map (
-      BYPASS_GCLK_FF => FALSE,       -- Bypass CLKDIV syncronization registers (TRUE/FALSE)
+      BYPASS_GCLK_FF => FALSE,       -- Bypass CLKDIV syncronization registers
       DATA_RATE_OQ => "SDR",         -- Output Data Rate ("SDR" or "DDR")
       DATA_RATE_OT => "SDR",         -- 3-state Data Rate ("SDR" or "DDR")
       DATA_WIDTH => 5,               -- Parallel data width (2-8)

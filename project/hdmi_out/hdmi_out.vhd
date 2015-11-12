@@ -5,14 +5,7 @@
 -- Module Name:  hdmi_out - Behavioral 
 -- Project Name: flashinglights
 -- Target Devices:  XC6SLX9
--- Description:   Converts VGA signals into DVID bitstreams.
---
---                'blank' must be asserted during the non-display 
---                portions of the frame
---
--- NOTE due to the PLL frequency limits, changes are needed in hdmi_out_clocks
--- to select pixel rates between 40 and 100 Mhz pixel clocks, or between 20 and 
--- 50 MHz.
+-- Description:   Converts VGA signal into TMDS bitstreams.
 --------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -23,9 +16,9 @@ entity hdmi_out is
     Port ( -- Clocking
            clk_pixel : IN std_logic;
            -- Pixel data
-           red_p     : in  STD_LOGIC_VECTOR (7 downto 0);
-           green_p   : in  STD_LOGIC_VECTOR (7 downto 0);
-           blue_p    : in  STD_LOGIC_VECTOR (7 downto 0);
+           red       : in  STD_LOGIC_VECTOR (7 downto 0);
+           green     : in  STD_LOGIC_VECTOR (7 downto 0);
+           blue      : in  STD_LOGIC_VECTOR (7 downto 0);
            blank     : in  STD_LOGIC;
            hsync     : in  STD_LOGIC;
            vsync     : in  STD_LOGIC;
@@ -35,13 +28,14 @@ entity hdmi_out is
 end hdmi_out;
 
 architecture Behavioral of hdmi_out is
+	--todo
 	COMPONENT hdmi_out_clocks
 	PORT(
 		clk_pixel : IN std_logic;          
 		clk_x1 : OUT std_logic;
 		clk_x2 : OUT std_logic;
 		clk_x10 : OUT std_logic;
-		serdes_strobe : OUT std_logic
+		serdes_strobe : OUT std_logic --wtf
 		);
 	END COMPONENT;
 
@@ -92,21 +86,23 @@ architecture Behavioral of hdmi_out is
    signal rd_enable     : std_logic := '0';
    signal not_ready_yet : std_logic;
    
+	--C0, C1
    constant c_red       : std_logic_vector(1 downto 0) := (others => '0');
    constant c_green     : std_logic_vector(1 downto 0) := (others => '0');
    signal   c_blue      : std_logic_vector(1 downto 0);
 
-   signal red_s     : STD_LOGIC;
-   signal green_s   : STD_LOGIC;
-   signal blue_s    : STD_LOGIC;
-   signal clock_s   : STD_LOGIC;
+	--serialized
+   signal red_s       : STD_LOGIC;
+   signal green_s     : STD_LOGIC;
+   signal blue_s      : STD_LOGIC;
+   signal clock_s     : STD_LOGIC;
 
 begin   
    -- Send the pixels to the encoder
-   c_blue <= vsync & hsync;
-   tmds_encoder_red:   tmds_encoder PORT MAP(clk => clk_pixel, data => red_p,   c => c_red,   blank => blank, encoded => encoded_red);
-   tmds_encoder_green: tmds_encoder PORT MAP(clk => clk_pixel, data => green_p, c => c_green, blank => blank, encoded => encoded_green);
-   tmds_encoder_blue:  tmds_encoder PORT MAP(clk => clk_pixel, data => blue_p,  c => c_blue,  blank => blank, encoded => encoded_blue);
+   c_blue <= vsync & hsync; -- HSYNC and VSYNC are encoded on the blue channel for transmission during the blanking period (XAPP460)
+   tmds_encoder_red:   tmds_encoder PORT MAP(clk => clk_pixel, data => red,   c => c_red,   blank => blank, encoded => encoded_red);
+   tmds_encoder_green: tmds_encoder PORT MAP(clk => clk_pixel, data => green, c => c_green, blank => blank, encoded => encoded_green);
+   tmds_encoder_blue:  tmds_encoder PORT MAP(clk => clk_pixel, data => blue,  c => c_blue,  blank => blank, encoded => encoded_blue);
 
    -- Then to a small FIFO
    fifo_in <= encoded_red & encoded_green & encoded_blue;
@@ -119,7 +115,7 @@ begin
 		serdes_strobe => serdes_strobe
 	);
 
-   
+--FIFO to remove allowed data lane skew
 out_fifo: tmds_out_fifo
   PORT MAP (
     wr_clk => clk_pixel,

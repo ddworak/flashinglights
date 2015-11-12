@@ -57,6 +57,7 @@ xst/
 _ngo/
 _xmsgs/
 netgen/
+project/ipcore_dir/tmp/
 *~
 
 # KDE directory preferences

@@ -27,12 +27,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 library UNISIM;
 use UNISIM.VComponents.all;
 
+--todo
 entity hdmi_out_clocks is
     Port ( clk_pixel     : in  STD_LOGIC;
            clk_x1        : out STD_LOGIC;  
            clk_x2        : out STD_LOGIC;  
            clk_x10       : out STD_LOGIC;  
-           serdes_strobe : out STD_LOGIC); 
+           serdes_strobe : out STD_LOGIC); --wtf
 end hdmi_out_clocks;
 
 architecture Behavioral of hdmi_out_clocks is
@@ -82,11 +83,11 @@ begin
 BUFG_pclockx2  : BUFG port map ( I => clock_x2_unbuffered,  O => clock_local_x2);
 BUFG_pclock    : BUFG port map ( I => clock_x1_unbuffered,  O => clock_local_x1);
 
-  
+  --todo bufpll
   BUFPLL_inst : BUFPLL
    generic map (
-      DIVIDE => 5,         -- DIVCLK divider (1-8) !!!! IMPORTANT TO CHANGE THIS AS NEEDED !!!!
-      ENABLE_SYNC => TRUE  -- Enable synchrnonization between PLL and GCLK (TRUE/FALSE) -- should be true
+      DIVIDE => 5,         -- DIVCLK divider (1-8)
+      ENABLE_SYNC => TRUE  -- synchronization between PLL and GCLK
    )
    port map (
       IOCLK        => clock_local_x10,       -- Clock used to send bits

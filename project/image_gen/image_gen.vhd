@@ -16,9 +16,9 @@ entity image_gen is
     Port ( clk50           : in  STD_LOGIC;
 		     pixel_clock     : out std_logic;
 
-           red_p   : out STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
-           green_p : out STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
-           blue_p  : out STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
+           red    : out STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
+           green   : out STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
+           blue    : out STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
            blank   : out STD_LOGIC := '0';
            hsync   : out STD_LOGIC := '0';
            vsync   : out STD_LOGIC := '0');
@@ -30,6 +30,7 @@ architecture Behavioral of image_gen is
          pixel_clock     : OUT std_logic);
 	END COMPONENT;
 
+	--todo
    constant h_rez        : natural := 1280;
    constant h_sync_start : natural := 1280+72;
    constant h_sync_end   : natural := 1280+80;
@@ -57,14 +58,14 @@ process(clk75)
    begin
       if rising_edge(clk75) then
          if h_count < h_rez and v_count < v_rez then
-            red_p   <= std_logic_vector(h_count(7 downto 0)+h_offset);
-            green_p <= std_logic_vector(v_count(7 downto 0)+v_offset);
-            blue_p  <= std_logic_vector(h_count(7 downto 0)+v_count(7 downto 0));
+            red     <= std_logic_vector(h_count(7 downto 0)+h_offset);
+            green   <= std_logic_vector(v_count(7 downto 0)+v_offset);
+            blue    <= std_logic_vector(h_count(7 downto 0)+v_count(7 downto 0));
             blank   <= '0';
          else
-            red_p   <= (others => '0');
-            green_p <= (others => '0');
-            blue_p  <= (others => '0');
+            red     <= (others => '0');
+            green   <= (others => '0');
+            blue    <= (others => '0');
             blank   <= '1';
          end if;
 
