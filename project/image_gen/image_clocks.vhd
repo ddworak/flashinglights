@@ -50,6 +50,7 @@ begin
       RST      => '0'              -- 1-bit input: Reset input
    );
 
+--buffering input for clocking
 BUFG_clk    : BUFG port map ( I => clk50,                O => clk50_buffered);
 BUFG_pclock : BUFG port map ( I => clk75_unbuffered,  O => clk75);
 

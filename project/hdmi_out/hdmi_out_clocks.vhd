@@ -6,21 +6,6 @@
 -- Project Name: flashinglights
 -- Target Devices:  XC6SLX9
 -- Description: Generate clocking for sending TMDS data use the OSERDES2
--- 
--- REMEMBER TO CHECK CLKIN_PERIOD ON PLL_BASE
--- For pixel rates between 25Mhz and 50MHz use the following PLL settings:
---      CLKFBOUT_MULT => 20,                  
---      CLKOUT0_DIVIDE => 2,       CLKOUT0_PHASE => 0.0,   -- Output 10x original frequency
---      CLKOUT1_DIVIDE => 10,       CLKOUT1_PHASE => 0.0,   -- Output 2x original frequency
---      CLKOUT2_DIVIDE => 20,      CLKOUT2_PHASE => 0.0,   -- Output 1x original frequency
---      CLKIN_PERIOD   => 20.0,
---
--- For pixel rates between 40Mhz and 100MHz use the following PLL settings:
---      CLKFBOUT_MULT => 10,                  
---      CLKOUT0_DIVIDE => 1,       CLKOUT0_PHASE => 0.0,   -- Output 10x original frequency
---      CLKOUT1_DIVIDE => 5,       CLKOUT1_PHASE => 0.0,   -- Output 2x original frequency
---      CLKOUT2_DIVIDE => 10,      CLKOUT2_PHASE => 0.0,   -- Output 1x original frequency
---      CLKIN_PERIOD   => 10.0,
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
@@ -80,6 +65,7 @@ begin
       RST      => '0'
    );
 
+--buffer for clocking
 BUFG_pclockx2  : BUFG port map ( I => clock_x2_unbuffered,  O => clock_local_x2);
 BUFG_pclock    : BUFG port map ( I => clock_x1_unbuffered,  O => clock_local_x1);
 
