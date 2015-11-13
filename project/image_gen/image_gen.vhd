@@ -37,14 +37,14 @@ architecture Behavioral of image_gen is
    constant h_rez        : natural := 1280;
    constant h_sync_start : natural := 1280+72;
    constant h_sync_end   : natural := 1280+72+80;
-   constant h_max        : natural := 1647;
+   constant h_max        : natural := 1647; -- max vertical blanking area in 720p@60Hz is 370 (could be 1649)
    signal   h_count      : unsigned(11 downto 0) := (others => '0');
    signal   h_offset     : unsigned(7 downto 0) := (others => '0');
 
    constant v_rez        : natural := 720;
    constant v_sync_start : natural := 720+3;
    constant v_sync_end   : natural := 720+3+5;
-   constant v_max        : natural := 749;
+   constant v_max        : natural := 749; -- max vertical blanking area in 720p is 30
    signal   v_count      : unsigned(11 downto 0) := (others => '0');
    signal   v_offset     : unsigned(7 downto 0) := (others => '0');
    signal clk75 : std_logic;

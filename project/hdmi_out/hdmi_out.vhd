@@ -28,12 +28,14 @@ entity hdmi_out is
 end hdmi_out;
 
 architecture Behavioral of hdmi_out is
-	--todo
-	COMPONENT hdmi_out_clocks
+	--The 10x pixel clock is used to match the serial data bit rate. 
+	--It is routed to the OSERDES2 clock
+	--The 2x clock needed to convert the 10-bit TMDS encoded data into a 5-bit data stream.
+through a dedicated BUFPLL driver.	COMPONENT hdmi_out_clocks
 	PORT(
 		clk_pixel : IN std_logic;          
 		clk_x1 : OUT std_logic;
-		clk_x2 : OUT std_logic;
+		clk_x2 : OUT std_logic; 
 		clk_x10 : OUT std_logic;
 		serdes_strobe : OUT std_logic --wtf
 		);

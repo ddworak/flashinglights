@@ -15,10 +15,11 @@ use UNISIM.VComponents.all;
 --todo
 entity hdmi_out_clocks is
     Port ( clk_pixel     : in  STD_LOGIC;
-           clk_x1        : out STD_LOGIC;  
-           clk_x2        : out STD_LOGIC;  
-           clk_x10       : out STD_LOGIC;  
-           serdes_strobe : out STD_LOGIC); --wtf
+           clk_x1        : out STD_LOGIC;  -- pixel clock...
+           clk_x2        : out STD_LOGIC;  -- and 2x pixel clock -> converts the 10-bit TMDS encoded data into a 5-bit data stream
+           clk_x10       : out STD_LOGIC;  -- used to match the serial data bit rate.  -> to OSERDES
+           serdes_strobe : out STD_LOGIC); 
+--allows safe transfer of low-speed parallel data to the FPGA logic from the input SerDes. 
 end hdmi_out_clocks;
 
 architecture Behavioral of hdmi_out_clocks is
