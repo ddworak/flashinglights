@@ -29,15 +29,16 @@ end hdmi_out;
 
 architecture Behavioral of hdmi_out is
 	--The 10x pixel clock is used to match the serial data bit rate. 
-	--It is routed to the OSERDES2 clock
 	--The 2x clock needed to convert the 10-bit TMDS encoded data into a 5-bit data stream.
+	--OSERDES2 block takes the 2x pixel clock as its 5-bit parallel data input reference. 
 through a dedicated BUFPLL driver.	COMPONENT hdmi_out_clocks
 	PORT(
 		clk_pixel : IN std_logic;          
 		clk_x1 : OUT std_logic;
 		clk_x2 : OUT std_logic; 
 		clk_x10 : OUT std_logic;
-		serdes_strobe : OUT std_logic --wtf
+		serdes_strobe : OUT std_logic --allows safe transfer of low-speed 
+		-- parallel data to the FPGA logic from the input SerDes. 
 		);
 	END COMPONENT;
 
