@@ -5,7 +5,7 @@
 -- Module Name:  image_gen - Behavioral 
 -- Project Name: flashinglights
 -- Target Devices:  XC6SLX9
--- Description: Test 720p signal generator
+-- Description: Test 720p signal generator with optional animation
 --
 ----------------------------------------------------------------------------------
 library IEEE;
@@ -14,14 +14,17 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity image_gen is
     Port ( clk50           : in  STD_LOGIC;
-		     pixel_clock     : out std_logic;
+		     move 				: in STD_LOGIC;
+			  pixel_clock     : out STD_LOGIC;
+			  
 
            red    : out STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
            green   : out STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
            blue    : out STD_LOGIC_VECTOR (7 downto 0) := (others => '0');
            blank   : out STD_LOGIC := '0';
            hsync   : out STD_LOGIC := '0';
-           vsync   : out STD_LOGIC := '0');
+           vsync   : out STD_LOGIC := '0'
+			  );
 end image_gen;
 
 architecture Behavioral of image_gen is
@@ -33,7 +36,7 @@ architecture Behavioral of image_gen is
 	--todo
    constant h_rez        : natural := 1280;
    constant h_sync_start : natural := 1280+72;
-   constant h_sync_end   : natural := 1280+80;
+   constant h_sync_end   : natural := 1280+72+80;
    constant h_max        : natural := 1647;
    signal   h_count      : unsigned(11 downto 0) := (others => '0');
    signal   h_offset     : unsigned(7 downto 0) := (others => '0');
@@ -58,10 +61,10 @@ process(clk75)
    begin
       if rising_edge(clk75) then
          if h_count < h_rez and v_count < v_rez then
-            red     <= std_logic_vector(h_count(7 downto 0)+h_offset);
-            green   <= std_logic_vector(v_count(7 downto 0)+v_offset);
-            blue    <= std_logic_vector(h_count(7 downto 0)+v_count(7 downto 0));
-            blank   <= '0';
+				blank   <= '0';
+				red     <= std_logic_vector(h_count(7 downto 0)+h_offset);
+				green   <= std_logic_vector(v_count(7 downto 0)+v_offset);
+				blue    <= std_logic_vector(h_count(7 downto 0)+v_count(7 downto 0));
          else
             red     <= (others => '0');
             green   <= (others => '0');
@@ -84,8 +87,10 @@ process(clk75)
          if h_count = h_max then
             h_count <= (others => '0');
             if v_count = v_max then
-               h_offset <= h_offset + 1;
-               v_offset <= v_offset + 1;
+					if move = '1' then
+						h_offset <= h_offset + 1;
+						v_offset <= v_offset + 1;
+					end if;
                v_count <= (others => '0');
             else
                v_count <= v_count+1;

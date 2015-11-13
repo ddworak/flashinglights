@@ -12,6 +12,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity flashinglights is
     Port ( clk50      : in  STD_LOGIC;
+			  sw			 : in STD_LOGIC;
            hdmi_out_p : out  STD_LOGIC_VECTOR(3 downto 0); -- Differential Signaling - the signal is sent over two separate lines, 
            hdmi_out_n : out  STD_LOGIC_VECTOR(3 downto 0); -- out of phase with each other (the positive and negative reversed)   
            leds       : out std_logic_vector(7 downto 0));
@@ -21,7 +22,8 @@ architecture Behavioral of flashinglights is
 
 	COMPONENT image_gen
 	PORT(
-		clk50           : IN std_logic;          
+		clk50           : IN std_logic;
+		move 				 : IN std_logic;
 		pixel_clock     : OUT std_logic; --75 MHz for HDTV 720p (according to XAPP495)
 		red             : OUT std_logic_vector(7 downto 0);
 		green           : OUT std_logic_vector(7 downto 0);
@@ -64,6 +66,7 @@ begin
 ---------------------------------------
 i_image_gen: image_gen PORT MAP(
 		clk50 => clk50,
+		move => sw,
 		pixel_clock     => pixel_clock,      
 		red             => red,
 		green           => green,
