@@ -38,7 +38,7 @@ through a dedicated BUFPLL driver.	COMPONENT hdmi_out_clocks
 		clk_x2 : OUT std_logic; 
 		clk_x10 : OUT std_logic;
 		serdes_strobe : OUT std_logic --allows safe transfer of low-speed 
-		-- parallel data to the FPGA logic from the input SerDes. 
+		-- parallel data from the FPGA logic to output SerDes. 
 		);
 	END COMPONENT;
 
