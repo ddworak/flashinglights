@@ -68,10 +68,7 @@ architecture Behavioral of hdmi_in is
    signal cal_start_count : unsigned(7 downto 0) := (others => '0');          
    
    COMPONENT input_channel
-	GENERIC(
-         fixed_delay     : in natural
-      );
-   PORT(
+	PORT(
       clk_fabric    : IN  std_logic;
       clk_fabric_x2 : IN  std_logic;
       clk_input     : IN  std_logic;
@@ -179,9 +176,8 @@ BUFPLL_inst : BUFPLL
 ----------------------------------------
 -- c0 channel input - red channel
 ----------------------------------------
-input_channel_c0: input_channel GENERIC MAP(
-      fixed_delay     => 30
-    ) PORT MAP(
+input_channel_c0: input_channel 
+	PORT MAP(
       clk_fabric      => clock_x1,
       clk_fabric_x2   => clock_x2,
       clk_input       => ioclock,
@@ -205,9 +201,8 @@ input_channel_c0: input_channel GENERIC MAP(
 -- c1 channel input - blue channel
 ----------------------------------------
    
-input_channel_c1: input_channel GENERIC MAP(
-      fixed_delay     => 40
-    ) PORT MAP(
+input_channel_c1: input_channel 
+	PORT MAP(
       clk_fabric      => clock_x1,
       clk_fabric_x2   => clock_x2,
       clk_input       => ioclock,
@@ -230,9 +225,8 @@ input_channel_c1: input_channel GENERIC MAP(
 ----------------------------------------
 -- c2 channel input - green channel and syncs
 ----------------------------------------
-input_channel_c2: input_channel GENERIC MAP(
-      fixed_delay     => 30
-    ) PORT MAP(
+input_channel_c2: input_channel 
+	PORT MAP(
       clk_fabric      => clock_x1,
       clk_fabric_x2   => clock_x2,
       clk_input       => ioclock,

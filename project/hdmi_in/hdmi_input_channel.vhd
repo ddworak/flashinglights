@@ -13,10 +13,7 @@ library UNISIM;
 use UNISIM.VComponents.all;
 
 entity input_channel is
-	 GENERIC(
-         fixed_delay     : in natural
-      );
-    Port ( clk_fabric      : in  STD_LOGIC;
+	 Port ( clk_fabric      : in  STD_LOGIC;
            clk_fabric_x2   : in  STD_LOGIC;
            clk_input       : in  STD_LOGIC;
            strobe          : in  STD_LOGIC;
@@ -38,24 +35,6 @@ entity input_channel is
 end input_channel;
 
 architecture Behavioral of input_channel is
-
-   COMPONENT input_delay
-   GENERIC(
-         fixed_delay     : in natural
-      );
-   PORT(
-      bit_clock       : IN  std_logic;
-      data_in         : IN  std_logic;
-      data_out        : OUT std_logic;
-
-      control_clock   : IN  std_logic;
-      adjust_delay    : IN  std_logic;
-      increase_delay  : IN  std_logic;
-      reset_delay     : IN  std_logic;
-      start_calibrate : IN  std_logic;          
-      calibrate_busy  : OUT std_logic
-      );
-   END COMPONENT;
 	
    COMPONENT input_serialiser
    PORT(
