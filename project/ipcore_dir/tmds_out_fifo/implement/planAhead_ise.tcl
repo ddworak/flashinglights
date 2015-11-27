@@ -45,7 +45,7 @@
 # PART OF THIS FILE AT ALL TIMES.
 
 
-set device xc6slx25ftg256-3
+set device xc6slx9ftg256-3
 set projName tmds_out_fifo
 set design tmds_out_fifo
 set projDir [file dirname [info script]]

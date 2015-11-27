@@ -11,26 +11,44 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity flashinglights is
-    Port ( clk50      : in  STD_LOGIC;
-			  sw			 : in STD_LOGIC;
-           hdmi_out_p : out  STD_LOGIC_VECTOR(3 downto 0); -- Differential Signaling - the signal is sent over two separate lines, 
-           hdmi_out_n : out  STD_LOGIC_VECTOR(3 downto 0); -- out of phase with each other (the positive and negative reversed)   
-           leds       : out std_logic_vector(7 downto 0));
+    Port ( clk50      	: in  STD_LOGIC;
+			  sw			 	: in STD_LOGIC;
+			  hdmi_in_p 	: in STD_LOGIC_VECTOR(3 downto 0);
+			  hdmi_in_n 	: in STD_LOGIC_VECTOR(3 downto 0);
+           hdmi_out_p 	: out  STD_LOGIC_VECTOR(3 downto 0); -- Differential Signaling - the signal is sent over two separate lines, 
+           hdmi_out_n 	: out  STD_LOGIC_VECTOR(3 downto 0); -- out of phase with each other (the positive and negative reversed)   
+			  hdmi_in_sclk  : inout  STD_LOGIC;
+           hdmi_in_sdat  : inout  STD_LOGIC;
+           leds       	: out std_logic_vector(7 downto 0));
 end flashinglights;
 
 architecture Behavioral of flashinglights is
 
-	COMPONENT image_gen
+--	COMPONENT image_gen
+--	PORT(
+--		clk50           : IN std_logic;
+--		move 				 : IN std_logic;
+--		pixel_clock     : OUT std_logic; --75 MHz for HDTV 720p (according to XAPP495)
+--		red             : OUT std_logic_vector(7 downto 0);
+--		green           : OUT std_logic_vector(7 downto 0);
+--		blue            : OUT std_logic_vector(7 downto 0);
+--		blank           : OUT std_logic;
+--		hsync           : OUT std_logic;
+--		vsync           : OUT std_logic
+--		);
+--	END COMPONENT;
+	
+	COMPONENT hdmi_in
 	PORT(
-		clk50           : IN std_logic;
-		move 				 : IN std_logic;
-		pixel_clock     : OUT std_logic; --75 MHz for HDTV 720p (according to XAPP495)
-		red             : OUT std_logic_vector(7 downto 0);
-		green           : OUT std_logic_vector(7 downto 0);
-		blue            : OUT std_logic_vector(7 downto 0);
-		blank           : OUT std_logic;
-		hsync           : OUT std_logic;
-		vsync           : OUT std_logic
+		clk_pixel	: OUT std_logic; --75 MHz for HDTV 720p (according to XAPP495)
+		red         : OUT std_logic_vector(7 downto 0);
+		green       : OUT std_logic_vector(7 downto 0);
+		blue        : OUT std_logic_vector(7 downto 0);
+		blank       : OUT std_logic;
+		hsync       : OUT std_logic;
+		vsync       : OUT std_logic;
+		tmds_in_p 	: IN std_logic_vector(3 downto 0);
+		tmds_in_n 	: IN std_logic_vector(3 downto 0)
 		);
 	END COMPONENT;
 
@@ -50,35 +68,56 @@ architecture Behavioral of flashinglights is
 	END COMPONENT;
 
 	signal pixel_clock     : std_logic;
-
+	
    signal red     : std_logic_vector(7 downto 0);
    signal green   : std_logic_vector(7 downto 0);
    signal blue    : std_logic_vector(7 downto 0);
 	signal blank   : std_logic;
 	signal hsync   : std_logic;
-	signal vsync   : std_logic;          
-
+	signal vsync   : std_logic;              
+   
 begin
+   hdmi_in_sclk  <= 'Z';
+   hdmi_in_sdat  <= 'Z';
+	
    leds <= x"55";
 
 ---------------------------------------
 -- 720p test pattern
 ---------------------------------------
-i_image_gen: image_gen PORT MAP(
-		clk50 => clk50,
-		move => sw,
-		pixel_clock     => pixel_clock,      
+--i_image_gen: image_gen PORT MAP(
+--		clk50 => clk50,
+--		move => sw,
+--		pixel_clock     => pixel_clock,      
+--		red             => red,
+--		green           => green,
+--		blue            => blue,
+--		blank           => blank,
+--		hsync           => hsync,
+--		vsync           => vsync
+--	);
+
+---------------------------------------------------
+-- HDMI(TMDS) input 
+---------------------------------------------------
+
+i_hdmi_in: hdmi_in PORT MAP(
+		clk_pixel     => pixel_clock,      
 		red             => red,
 		green           => green,
 		blue            => blue,
 		blank           => blank,
 		hsync           => hsync,
-		vsync           => vsync
+		vsync           => vsync,
+		
+		tmds_in_p => hdmi_in_p,
+		tmds_in_n => hdmi_in_n
 	);
 
 ---------------------------------------------------
 -- HDMI(TMDS) output 
 ---------------------------------------------------
+
 i_hdmi_out: hdmi_out PORT MAP(
 		clk_pixel  => pixel_clock,
      

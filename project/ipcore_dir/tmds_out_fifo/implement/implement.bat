@@ -70,7 +70,7 @@ cd results
 
 echo 'Running ngdbuild'
 
-ngdbuild -p xc6slx25-ftg256-3 -sd ../../../ tmds_out_fifo_exdes
+ngdbuild -p xc6slx9-ftg256-3 -sd ../../../ tmds_out_fifo_exdes
 
 echo 'Running map'
 map tmds_out_fifo_exdes -o mapped.ncd
