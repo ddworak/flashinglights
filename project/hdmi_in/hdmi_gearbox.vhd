@@ -2,16 +2,16 @@
 -- Company: AGH University of Science and Technology
 -- Engineer: Dawid Dworak, Mateusz Owczarek
 -- 
--- Module Name:  image_gen - Behavioral 
+-- Module Name:  gearbox
 -- Project Name: flashinglights
 -- Target Devices:  XC6SLX9
--- Description: HDMI Gearbox
+-- Description: 
+--To perform the required 10:1 serialization we need 1:2 FPGA soft gear box
+--It converts the 10-bit TMDS encoded data into a 5-bit data stream
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
---To perform the required 10:1 serialization we need 1:2 FPGA soft gear box
---It converts the 10-bit TMDS encoded data into a 5-bit data stream
 
 entity gearbox is
     Port ( clk_fabric_x2 : in  STD_LOGIC;

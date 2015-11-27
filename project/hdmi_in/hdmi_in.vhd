@@ -5,7 +5,7 @@
 -- Module Name:  hdmi_in - Behavioral 
 -- Project Name: flashinglights
 -- Target Devices:  XC6SLX9
--- Description:   Converts TMDS bitstreams (DVI-D/HDMI signal) into VGA signal.
+-- Description: Converts TMDS bitstreams (DVI-D/HDMI signal) into VGA signal.
 --------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

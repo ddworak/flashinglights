@@ -2,10 +2,10 @@
 -- Company: AGH University of Science and Technology
 -- Engineer: Dawid Dworak, Mateusz Owczarek
 -- 
--- Module Name:  image_gen - Behavioral 
+-- Module Name: tmds decode
 -- Project Name: flashinglights
 -- Target Devices:  XC6SLX9
--- Description: 
+-- Description: TMDS Decoder
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

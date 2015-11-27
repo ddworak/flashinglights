@@ -2,7 +2,7 @@
 -- Company: AGH University of Science and Technology
 -- Engineer: Dawid Dworak, Mateusz Owczarek
 -- 
--- Module Name:  hdmi_out - Behavioral 
+-- Module Name:  input_serialiser
 -- Project Name: flashinglights
 -- Target Devices:  XC6SLX9
 -- Description: Transforms serial data into 5-bit vectors.

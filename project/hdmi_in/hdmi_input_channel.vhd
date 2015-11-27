@@ -2,10 +2,10 @@
 -- Company: AGH University of Science and Technology
 -- Engineer: Dawid Dworak, Mateusz Owczarek
 -- 
--- Module Name:  hdmi_out - Behavioral 
+-- Module Name:  input_channel - Behavioral 
 -- Project Name: flashinglights
 -- Target Devices:  XC6SLX9
--- Description:   
+-- Description:   Single color input channel decoding raw data into VGA stream
 --------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
