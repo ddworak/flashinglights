@@ -47,14 +47,17 @@ architecture Behavioral of hdmi_in is
    signal pll_locked           : std_logic;
    signal sync_seen            : std_logic;
 
+	-- red signal
    signal c0_d       : std_logic_vector(7 downto 0);
    signal c0_c       : std_logic_vector(1 downto 0);
    signal c0_active  : std_logic;
 
+	-- green signal
    signal c1_d       : std_logic_vector(7 downto 0);
    signal c1_c       : std_logic_vector(1 downto 0);
    signal c1_active  : std_logic;
 
+	-- blue signal
    signal c2_d       : std_logic_vector(7 downto 0);
    signal c2_c       : std_logic_vector(1 downto 0);
    signal c2_active  : std_logic;
