@@ -13,7 +13,7 @@ library UNISIM;
 use UNISIM.VComponents.all;
 
 entity input_channel is
-   GENERIC(
+	 GENERIC(
          fixed_delay     : in natural
       );
     Port ( clk_fabric      : in  STD_LOGIC;
@@ -23,7 +23,7 @@ entity input_channel is
            tmds_p          : in  STD_LOGIC;
            tmds_n          : in  STD_LOGIC;
            invert          : in  STD_LOGIC;
-           framing         : in  std_logic_vector(3 downto 0); -- probably to LEDs
+           framing         : in  std_logic_vector(3 downto 0);
            data_out        : out STD_LOGIC_VECTOR (7 downto 0);
            control         : out STD_LOGIC_VECTOR (1 downto 0);
            active_data     : out std_logic;
@@ -56,7 +56,7 @@ architecture Behavioral of input_channel is
       calibrate_busy  : OUT std_logic
       );
    END COMPONENT;
-
+	
    COMPONENT input_serialiser
    PORT(
       clk_fabric_x2 : IN  std_logic;
@@ -104,25 +104,10 @@ diff_input : IBUFDS
       IB => tmds_n
    );
 
---i_input_delay: input_delay GENERIC MAP(
---      fixed_delay     => fixed_delay
---    ) PORT MAP(
---      bit_clock       => clk_input,
---      data_in         => serial_data,
---      data_out        => delayed_serial_data,
---      control_clock   => clk_fabric_x2,
---      adjust_delay    => adjust_delay,
---      increase_delay  => increase_delay,
---      reset_delay     => reset_delay,
---      start_calibrate => start_calibrate,
---      calibrate_busy  => calibrate_busy
---   );
-
 i_input_serialiser: input_serialiser PORT MAP(
       clk_fabric_x2 => clk_fabric_x2,
       clk_input     => clk_input,
       strobe        => strobe,
---      ser_input     => delayed_serial_data,
       ser_input     => serial_data,
       ser_data      => half_words
    );
@@ -146,9 +131,7 @@ i_tmds_decode: tmds_decode PORT MAP(
 look_for_sync: process (clk_fabric)
    begin
       if rising_edge(clk_fabric) then
-         ------------------------------------------------------------
-         -- Is the TMDS data one of two special sync codewords?
-         ------------------------------------------------------------
+         -- one of special sync codewords?
          if raw_tmds_word = "1101010100" or raw_tmds_word = "0010101011" then
             sync_seen <= '1';
          else

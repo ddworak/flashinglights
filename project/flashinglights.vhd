@@ -11,11 +11,11 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity flashinglights is
-    Port ( clk50      	: in  STD_LOGIC;
-			  sw			 	: in STD_LOGIC;
+    Port ( --clk50      	: in  STD_LOGIC;
+			  --sw			 	: in STD_LOGIC;
 			  hdmi_in_p 	: in STD_LOGIC_VECTOR(3 downto 0);
 			  hdmi_in_n 	: in STD_LOGIC_VECTOR(3 downto 0);
-           hdmi_out_p 	: out  STD_LOGIC_VECTOR(3 downto 0); -- Differential Signaling - the signal is sent over two separate lines, 
+           hdmi_out_p 	: out  STD_LOGIC_VECTOR(3 downto 0); -- differential signaling - the signal is sent over two separate lines, 
            hdmi_out_n 	: out  STD_LOGIC_VECTOR(3 downto 0); -- out of phase with each other (the positive and negative reversed)   
 			  hdmi_in_sclk  : inout  STD_LOGIC;
            hdmi_in_sdat  : inout  STD_LOGIC;
@@ -77,8 +77,8 @@ architecture Behavioral of flashinglights is
 	signal vsync   : std_logic;              
    
 begin
-   hdmi_in_sclk  <= 'Z';
-   hdmi_in_sdat  <= 'Z';
+   hdmi_in_sclk  <= '1';
+   hdmi_in_sdat  <= '1';
 	
    leds <= x"55";
 
