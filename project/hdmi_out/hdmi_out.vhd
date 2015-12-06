@@ -31,7 +31,8 @@ architecture Behavioral of hdmi_out is
 	--The 10x pixel clock is used to match the serial data bit rate. 
 	--The 2x clock needed to convert the 10-bit TMDS encoded data into a 5-bit data stream.
 	--OSERDES2 block takes the 2x pixel clock as its 5-bit parallel data input reference. 
-through a dedicated BUFPLL driver.	COMPONENT hdmi_out_clocks
+	--through a dedicated BUFPLL driver.
+	COMPONENT hdmi_out_clocks
 	PORT(
 		clk_pixel : IN std_logic;          
 		clk_x1 : OUT std_logic;

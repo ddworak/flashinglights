@@ -1,4 +1,5 @@
 # Output products list for <tmds_out_fifo>
+_xmsgs/pn_parser.xmsgs
 tmds_out_fifo/doc/fifo_generator_v9_3_readme.txt
 tmds_out_fifo/doc/fifo_generator_v9_3_vinfo.html
 tmds_out_fifo/doc/pg057-fifo-generator.pdf
