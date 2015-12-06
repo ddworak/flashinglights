@@ -11,7 +11,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity flashinglights is
-    Port ( --clk50      	: in  STD_LOGIC;
+    Port ( clk50      	: in  STD_LOGIC;
 			  --sw			 	: in STD_LOGIC;
 			  hdmi_in_p 	: in STD_LOGIC_VECTOR(3 downto 0);
 			  hdmi_in_n 	: in STD_LOGIC_VECTOR(3 downto 0);
@@ -19,7 +19,10 @@ entity flashinglights is
            hdmi_out_n 	: out  STD_LOGIC_VECTOR(3 downto 0); -- out of phase with each other (the positive and negative reversed)   
 			  hdmi_in_sclk  : inout  STD_LOGIC;
            hdmi_in_sdat  : inout  STD_LOGIC;
-           leds       	: out std_logic_vector(7 downto 0));
+           leds       	: out std_logic_vector(7 downto 0);
+			  spiout_mosi: out std_logic;
+			  spiout_sck: out std_logic
+			  );
 end flashinglights;
 
 architecture Behavioral of flashinglights is
@@ -37,6 +40,22 @@ architecture Behavioral of flashinglights is
 --		vsync           : OUT std_logic
 --		);
 --	END COMPONENT;
+
+	COMPONENT led_gen
+	PORT(
+		pixel_clock : in  STD_LOGIC;
+      data : out std_logic_vector(0 to 24*26-1)
+	);
+	END COMPONENT;
+	
+	COMPONENT spiout
+	PORT(
+		     clk50 : in  STD_LOGIC;
+           data : in  STD_LOGIC_VECTOR (26*24-1 downto 0);
+           MOSI : out  STD_LOGIC;
+           SCK : out  STD_LOGIC
+		);
+	END COMPONENT;
 	
 	COMPONENT hdmi_in
 	PORT(
@@ -74,7 +93,8 @@ architecture Behavioral of flashinglights is
    signal blue    : std_logic_vector(7 downto 0);
 	signal blank   : std_logic;
 	signal hsync   : std_logic;
-	signal vsync   : std_logic;              
+	signal vsync   : std_logic;  
+	signal framebuffer : std_logic_vector(0 to 26*24-1) := (others => '0');
    
 begin
    hdmi_in_sclk  <= '1';
@@ -113,6 +133,20 @@ i_hdmi_in: hdmi_in PORT MAP(
 		tmds_in_p => hdmi_in_p,
 		tmds_in_n => hdmi_in_n
 	);
+	
+i_led_gen: led_gen PORT MAP(
+	pixel_clock => pixel_clock,
+   data => framebuffer
+);
+
+i_spiout: spiout PORT MAP (
+		     clk50 => clk50,
+           data => framebuffer,
+           MOSI => spiout_mosi,
+           SCK => spiout_sck
+);
+
+
 
 ---------------------------------------------------
 -- HDMI(TMDS) output 
