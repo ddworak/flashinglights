@@ -25,7 +25,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity spiout is
     Port ( clk50 : in  STD_LOGIC;
-           data : in std_logic_vector(0 to 24*26-1); -- MSB first
+           data : in std_logic_vector(0 to 24*25-1); -- MSB first
            MOSI : out  STD_LOGIC;
            SCK : out  STD_LOGIC);
 end spiout;
@@ -39,7 +39,7 @@ signal wrcnt: std_logic_vector(9 downto 0) := (others => '0');
 begin
 process(clk50,sck_counter,sck_enable)
 	begin
-		if (rising_edge(clk50)) then
+		if (falling_edge(clk50)) then
 			sck_counter <= sck_counter + 1;
 		end if;
  	   sck_s <= sck_counter(11);
@@ -49,16 +49,16 @@ process(sck_s, sck_enable)
 	begin
 		-- Assert MOSI on the falling edge
 		-- So it can be sampled by the WS2801 on the rising edge.
-		if (falling_edge(sck_s)) then
-			if wrcnt <= 623 then
+		if (rising_edge(sck_s)) then
+			if wrcnt <= 599 then
 				MOSI <= data(to_integer(unsigned(wrcnt)));			
 				wrcnt <= (wrcnt + 1);			
 				sck_enable <= '1'; -- this will let the clock go high on the next rising edge.
-			elsif wrcnt = 624 then                
+			elsif wrcnt = 600 then                
 				MOSI <= '0';
 				sck_enable <= '0';
 				wrcnt <= (wrcnt + 1);
-			elsif wrcnt = 664 then
+			elsif wrcnt = 640 then
 				sck_enable <= '0';
 				MOSI <= '0';
 				wrcnt <= (others =>'0');
