@@ -14,6 +14,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity analyser is
     Port ( 
       clk_pixel : IN std_logic;
+		sw 		 : IN std_logic;
 		i_red     : IN std_logic_vector(7 downto 0);
 		i_green   : IN std_logic_vector(7 downto 0);
 		i_blue    : IN std_logic_vector(7 downto 0);
@@ -33,7 +34,6 @@ end analyser;
 
 architecture Behavioral of analyser is
 
-   
    signal red     : std_logic_vector(7 downto 0);
 	signal green   : std_logic_vector(7 downto 0);
 	signal blue    : std_logic_vector(7 downto 0);
@@ -79,7 +79,7 @@ architecture Behavioral of analyser is
 begin
 
 process(clk_pixel)
-	--variable edge : std_logic := '0'; --debug
+	variable edge : std_logic := '0'; --debug
    begin
       if rising_edge(clk_pixel) then
 				   					
@@ -94,23 +94,23 @@ process(clk_pixel)
 		
 
 			-- debug, mark blocks in blue
-			--edge := '0';
-			--for b in 0 to blocks-1 loop
-			--	if ((unsigned(x) = xstart(bn) or unsigned(x) = xstart(b)+128) and (unsigned(y) >= ystart(b) and unsigned(y) <= ystart(b)+128)) or
-			--			((unsigned(y) = ystart(b) or unsigned(y) = ystart(b)+128) and (unsigned(x) >= xstart(b) and unsigned(x) <= xstart(b)+128)) then
-			--		edge := '1';
-			--	end if;
-			--end loop;
+			edge := '0';
+			for b in 0 to blocks-1 loop
+				if ((unsigned(x) = xstart(b) or unsigned(x) = xstart(b)+128) and (unsigned(y) >= ystart(b) and unsigned(y) <= ystart(b)+128)) or
+						((unsigned(y) = ystart(b) or unsigned(y) = ystart(b)+128) and (unsigned(x) >= xstart(b) and unsigned(x) <= xstart(b)+128)) then
+					edge := '1';
+				end if;
+			end loop;
          
-			--if edge = '0' then
+			if edge = '0' or sw = '0' then
 				o_red     <= red;
 				o_green   <= green;
 				o_blue    <= blue;
-			--else
-			--	o_red     <= X"00";
-			--	o_green   <= X"00";
-			--	o_blue    <= X"FF";
-			--end if;
+			else
+				o_red     <= X"00";
+				o_green   <= X"00";
+				o_blue    <= X"FF";
+			end if;
 			
          o_blank   <= blank;
          o_hsync   <= hsync;
@@ -141,7 +141,7 @@ process(clk_pixel)
             x <= std_logic_vector(unsigned(x) + 1);
          end if;
 
-         if blank = '0' and blank = '1' then
+         if blank = '0' and i_blank = '1' then
             y <= std_logic_vector(unsigned(y) + 1);
             x <= (others => '0');
          end if;

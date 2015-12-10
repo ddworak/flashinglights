@@ -12,7 +12,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity flashinglights is
     Port ( clk50      	: in  STD_LOGIC;
-			  --sw			 	: in STD_LOGIC;
+			  sw			 	: in STD_LOGIC;
 			  hdmi_in_p 	: in STD_LOGIC_VECTOR(3 downto 0);
 			  hdmi_in_n 	: in STD_LOGIC_VECTOR(3 downto 0);
            hdmi_out_p 	: out  STD_LOGIC_VECTOR(3 downto 0); -- differential signaling - the signal is sent over two separate lines, 
@@ -91,7 +91,7 @@ architecture Behavioral of flashinglights is
 	COMPONENT analyser
 	PORT(
 		clk_pixel : IN std_logic;
-      
+      sw			 : IN std_logic;
 		i_red     : IN std_logic_vector(7 downto 0);
 		i_green   : IN std_logic_vector(7 downto 0);
 		i_blue    : IN std_logic_vector(7 downto 0);
@@ -196,6 +196,7 @@ i_hdmi_out: hdmi_out PORT MAP(
 --Color analyser
 i_analyser: analyser PORT MAP(
 		clk_pixel => pixel_clock,
+		sw => sw,
 		i_red     => red,
       i_green   => green,
       i_blue    => blue,
