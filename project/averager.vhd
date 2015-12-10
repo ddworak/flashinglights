@@ -45,8 +45,8 @@ architecture Behavioral of averager is
    -------------------------------
    -- Counters for screen position   
    -------------------------------
-   signal x : STD_LOGIC_VECTOR (10 downto 0);
-   signal y : STD_LOGIC_VECTOR (10 downto 0);
+   signal x : STD_LOGIC_VECTOR (11 downto 0);
+   signal y : STD_LOGIC_VECTOR (11 downto 0);
 
 	constant nblocks : integer := 25;	
 
@@ -102,24 +102,24 @@ process(clk_pixel)
 			end loop;
 		
 
-			-- debug, mark the block corners in red
-			blockedge := '0';
-			for bn in 0 to nblocks-1 loop
-				if (unsigned(x) = startx(bn) or unsigned(x) = startx(bn)+128) and
-						(unsigned(y) = starty(bn) or unsigned(y) = starty(bn)+128) then
-					blockedge := '1';
-				end if;
-			end loop;
+			-- debug, mark blocks in blue
+			--blockedge := '0';
+			--for bn in 0 to nblocks-1 loop
+			--	if ((unsigned(x) = startx(bn) or unsigned(x) = startx(bn)+128) and (unsigned(y) >= starty(bn) and unsigned(y) <= starty(bn)+128)) or
+			--			((unsigned(y) = starty(bn) or unsigned(y) = starty(bn)+128) and (unsigned(x) >= startx(bn) and unsigned(x) <= startx(bn)+128)) then
+			--		blockedge := '1';
+			--	end if;
+			--end loop;
          
-			if blockedge = '0' then
+			--if blockedge = '0' then
 				o_red     <= a_red;
 				o_green   <= a_green;
 				o_blue    <= a_blue;
-			else
-				o_red     <= X"00";
-				o_green   <= X"00";
-				o_blue    <= X"FF";
-			end if;
+			--else
+			--	o_red     <= X"00";
+			--	o_green   <= X"00";
+			--	o_blue    <= X"FF";
+			--end if;
 			
          o_blank   <= a_blank;
          o_hsync   <= a_hsync;

@@ -27,7 +27,7 @@ end flashinglights;
 
 architecture Behavioral of flashinglights is
 
---	COMPONENT image_gen
+--COMPONENT image_gen
 --	PORT(
 --		clk50           : IN std_logic;
 --		move 				 : IN std_logic;
@@ -41,14 +41,14 @@ architecture Behavioral of flashinglights is
 --		);
 --	END COMPONENT;
 
-	COMPONENT led_gen
-	PORT(
-		pixel_clock : in  STD_LOGIC;
-		--sw : in  STD_LOGIC;
-		leds: out std_logic_vector(0 to 7);
-      data : out std_logic_vector(0 to 24*25-1)
-	);
-	END COMPONENT;
+--	COMPONENT led_gen
+--	PORT(
+--		pixel_clock : in  STD_LOGIC;
+--		--sw : in  STD_LOGIC;
+--		leds: out std_logic_vector(0 to 7);
+--      data : out std_logic_vector(0 to 24*25-1)
+--	);
+--	END COMPONENT;
 	
 	COMPONENT spiout
 	PORT(
@@ -88,26 +88,26 @@ architecture Behavioral of flashinglights is
 		);
 	END COMPONENT;
 	
---	COMPONENT averager
---	PORT(
---		clk_pixel : IN std_logic;
---      
---		i_red     : IN std_logic_vector(7 downto 0);
---		i_green   : IN std_logic_vector(7 downto 0);
---		i_blue    : IN std_logic_vector(7 downto 0);
---		i_blank   : IN std_logic;
---		i_hsync   : IN std_logic;
---		i_vsync   : IN std_logic;          
---      
---		framebuffer: OUT std_logic_vector(0 to 24*25-1 );
---		o_red     : OUT std_logic_vector(7 downto 0);
---		o_green   : OUT std_logic_vector(7 downto 0);
---		o_blue    : OUT std_logic_vector(7 downto 0);
---		o_blank   : OUT std_logic;
---		o_hsync   : OUT std_logic;
---		o_vsync   : OUT std_logic        
---		);
---	END COMPONENT;
+	COMPONENT averager
+	PORT(
+		clk_pixel : IN std_logic;
+      
+		i_red     : IN std_logic_vector(7 downto 0);
+		i_green   : IN std_logic_vector(7 downto 0);
+		i_blue    : IN std_logic_vector(7 downto 0);
+		i_blank   : IN std_logic;
+		i_hsync   : IN std_logic;
+		i_vsync   : IN std_logic;          
+      
+		framebuffer: OUT std_logic_vector(0 to 24*25-1 );
+		o_red     : OUT std_logic_vector(7 downto 0);
+		o_green   : OUT std_logic_vector(7 downto 0);
+		o_blue    : OUT std_logic_vector(7 downto 0);
+		o_blank   : OUT std_logic;
+		o_hsync   : OUT std_logic;
+		o_vsync   : OUT std_logic        
+		);
+	END COMPONENT;
 
 	signal pixel_clock     : std_logic;
 	
@@ -130,7 +130,7 @@ begin
    hdmi_in_sclk  <= '1';
    hdmi_in_sdat  <= '1';
 	
-   --leds <= x"55";
+   leds <= x"55";
 
 ---------------------------------------
 -- 720p test pattern
@@ -164,12 +164,12 @@ i_hdmi_in: hdmi_in PORT MAP(
 		tmds_in_n => hdmi_in_n
 	);
 	
-i_led_gen: led_gen PORT MAP(
-	pixel_clock => pixel_clock,
-	--sw => sw,
-	leds => leds,
-   data => framebuffer
-);
+--i_led_gen: led_gen PORT MAP(
+--	pixel_clock => pixel_clock,
+--	--sw => sw,
+--	leds => leds,
+--   data => framebuffer
+--);
 
 i_spiout: spiout PORT MAP (
 		     clk50 => clk50,
@@ -198,22 +198,22 @@ i_hdmi_out: hdmi_out PORT MAP(
 		tmds_out_n => hdmi_out_n
 	);
 	
---	i_averager: averager PORT MAP(
---		clk_pixel => pixel_clock,
---		i_red     => red,
---      i_green   => green,
---      i_blue    => blue,
---		i_blank   => blank,
---		i_hsync   => hsync,
---		i_vsync   => vsync,
---		framebuffer => framebuffer,
---		o_red     => o_red,
---      o_green   => o_green,
---      o_blue    => o_blue,
---		o_blank   => o_blank,
---		o_hsync   => o_hsync,
---		o_vsync   => o_vsync
---	);
+	i_averager: averager PORT MAP(
+		clk_pixel => pixel_clock,
+		i_red     => red,
+      i_green   => green,
+      i_blue    => blue,
+		i_blank   => blank,
+		i_hsync   => hsync,
+		i_vsync   => vsync,
+		framebuffer => framebuffer,
+		o_red     => o_red,
+      o_green   => o_green,
+      o_blue    => o_blue,
+		o_blank   => o_blank,
+		o_hsync   => o_hsync,
+		o_vsync   => o_vsync
+	);
 
 
 end Behavioral;

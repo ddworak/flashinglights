@@ -47,7 +47,7 @@ architecture Behavioral of hdmi_in is
    signal pll_locked           : std_logic;
    signal sync_seen            : std_logic;
 
-	-- red signal
+	-- blue signal
    signal c0_d       : std_logic_vector(7 downto 0);
    signal c0_c       : std_logic_vector(1 downto 0);
    signal c0_active  : std_logic;
@@ -57,7 +57,7 @@ architecture Behavioral of hdmi_in is
    signal c1_c       : std_logic_vector(1 downto 0);
    signal c1_active  : std_logic;
 
-	-- blue signal
+	-- red signal
    signal c2_d       : std_logic_vector(7 downto 0);
    signal c2_c       : std_logic_vector(1 downto 0);
    signal c2_active  : std_logic;
@@ -100,9 +100,9 @@ begin
    -- Output the decoded VGA signals
    ----------------------------------
    clk_pixel <= clock_x1;
-   red  <= c0_d;
+   blue  <= c0_d;
    green <= c1_d;
-   blue   <= c2_d;
+   red   <= c2_d;
    hsync   <= c0_c(0);  
    vsync   <= c0_c(1);  
    blank   <= not c2_active;
@@ -177,7 +177,7 @@ BUFPLL_inst : BUFPLL
    );
 
 ----------------------------------------
--- c0 channel input - red channel
+-- c0 channel input - blue channel
 ----------------------------------------
 input_channel_c0: input_channel 
 	PORT MAP(
@@ -201,7 +201,7 @@ input_channel_c0: input_channel
    );   
 
 ----------------------------------------
--- c1 channel input - blue channel
+-- c1 channel input - green channel
 ----------------------------------------
    
 input_channel_c1: input_channel 
@@ -226,7 +226,7 @@ input_channel_c1: input_channel
    );   
 
 ----------------------------------------
--- c2 channel input - green channel and syncs
+-- c2 channel input - red channel and syncs
 ----------------------------------------
 input_channel_c2: input_channel 
 	PORT MAP(
