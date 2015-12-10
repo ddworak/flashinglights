@@ -88,7 +88,7 @@ architecture Behavioral of flashinglights is
 		);
 	END COMPONENT;
 	
-	COMPONENT averager
+	COMPONENT analyser
 	PORT(
 		clk_pixel : IN std_logic;
       
@@ -132,9 +132,8 @@ begin
 	
    leds <= x"55";
 
----------------------------------------
+
 -- 720p test pattern
----------------------------------------
 --i_image_gen: image_gen PORT MAP(
 --		clk50 => clk50,
 --		move => sw,
@@ -147,10 +146,7 @@ begin
 --		vsync           => vsync
 --	);
 
----------------------------------------------------
 -- HDMI(TMDS) input 
----------------------------------------------------
-
 i_hdmi_in: hdmi_in PORT MAP(
 		clk_pixel     => pixel_clock,      
 		red             => red,
@@ -164,6 +160,7 @@ i_hdmi_in: hdmi_in PORT MAP(
 		tmds_in_n => hdmi_in_n
 	);
 	
+
 --i_led_gen: led_gen PORT MAP(
 --	pixel_clock => pixel_clock,
 --	--sw => sw,
@@ -171,6 +168,7 @@ i_hdmi_in: hdmi_in PORT MAP(
 --   data => framebuffer
 --);
 
+--SPI out
 i_spiout: spiout PORT MAP (
 		     clk50 => clk50,
            data => framebuffer,
@@ -180,25 +178,23 @@ i_spiout: spiout PORT MAP (
 
 
 
----------------------------------------------------
 -- HDMI(TMDS) output 
----------------------------------------------------
-
 i_hdmi_out: hdmi_out PORT MAP(
-		clk_pixel  => pixel_clock,
+	clk_pixel  => pixel_clock,
+	red        => o_red,
+	green      => o_green,
+	blue       => o_blue,
+	blank      => o_blank,
+	hsync      => o_hsync,
+	vsync      => o_vsync,
      
-		red        => o_red,
-		green      => o_green,
-		blue       => o_blue,
-		blank      => o_blank,
-		hsync      => o_hsync,
-		vsync      => o_vsync,
-     
-		tmds_out_p => hdmi_out_p,
-		tmds_out_n => hdmi_out_n
-	);
+	tmds_out_p => hdmi_out_p,
+	tmds_out_n => hdmi_out_n
+);
 	
-	i_averager: averager PORT MAP(
+	
+--Color analyser
+i_analyser: analyser PORT MAP(
 		clk_pixel => pixel_clock,
 		i_red     => red,
       i_green   => green,

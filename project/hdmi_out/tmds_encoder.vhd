@@ -6,8 +6,7 @@
 -- Project Name: flashinglights
 -- Target Devices:  XC6SLX9
 -- Description: TMDS Encoder 
---     8 bits colour, 2 control bits and one blanking bits in
---       10 bits of TMDS encoded data out
+--     8 bits colour, 2 control bits and one blanking bits in 10 bits of TMDS encoded data out
 --     Clocked at the pixel clock
 --
 ----------------------------------------------------------------------------------
@@ -33,7 +32,8 @@ architecture Behavioral of tmds_encoder is
    signal data_word_disparity : STD_LOGIC_VECTOR (3 downto 0);
    signal dc_bias             : STD_LOGIC_VECTOR (3 downto 0) := (others => '0');
 begin
-   -- Work our the two different encodings for the byte
+
+--two different encodings for byte
    xored(0) <= data(0);
    xored(1) <= data(1) xor xored(0);
    xored(2) <= data(2) xor xored(1);

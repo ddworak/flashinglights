@@ -96,9 +96,7 @@ architecture Behavioral of hdmi_in is
    signal x : unsigned(12 downto 0) := (others => '0');
    signal y : unsigned(12 downto 0) := (others => '0');
 begin   
-   ----------------------------------
    -- Output the decoded VGA signals
-   ----------------------------------
    clk_pixel <= clock_x1;
    blue  <= c0_d;
    green <= c1_d;
@@ -107,9 +105,7 @@ begin
    vsync   <= c0_c(1);  
    blank   <= not c2_active;
 
-------------------------------------------
 -- Receive the differential clock
-------------------------------------------
 clk_diff_input : IBUFDS
    generic map (
       DIFF_TERM    => FALSE,
@@ -121,15 +117,12 @@ clk_diff_input : IBUFDS
       IB => tmds_in_n(3)
    );
    
-------------------------------------------
+
 -- Buffer it before the PLL
-------------------------------------------
 BUFG_clk : BUFG port map ( I => hdmi_clk, O => hdmi_clk_buffered);
 
-------------------------------------------
 -- Generate the bit clocks for SERDES
 -- Adjust the phase in a 10:2:1 ratio (e.g. 50:10:5)
-------------------------------------------
 PLL_BASE_inst : PLL_BASE
    generic map (
       CLKFBOUT_MULT => 10,                  
@@ -159,9 +152,7 @@ PLL_BASE_inst : PLL_BASE
    BUFG_pclockx10 : BUFG port map ( I => clock_x10_unbuffered, O => clock_x10 );
 
   
-------------------------------------------------
 -- Buffer the clocks for serializers
-------------------------------------------------
 BUFPLL_inst : BUFPLL
    generic map (
       DIVIDE => 5,         -- DIVCLK divider (1-8)
@@ -176,9 +167,8 @@ BUFPLL_inst : BUFPLL
       PLLIN        => clock_x10_unbuffered   -- clock to use for bit capture
    );
 
-----------------------------------------
+
 -- c0 channel input - blue channel
-----------------------------------------
 input_channel_c0: input_channel 
 	PORT MAP(
       clk_fabric      => clock_x1,
@@ -200,10 +190,8 @@ input_channel_c0: input_channel
       calibrate_busy  => open
    );   
 
-----------------------------------------
+
 -- c1 channel input - green channel
-----------------------------------------
-   
 input_channel_c1: input_channel 
 	PORT MAP(
       clk_fabric      => clock_x1,
@@ -225,9 +213,8 @@ input_channel_c1: input_channel
       calibrate_busy  => open
    );   
 
-----------------------------------------
+
 -- c2 channel input - red channel and syncs
-----------------------------------------
 input_channel_c2: input_channel 
 	PORT MAP(
       clk_fabric      => clock_x1,

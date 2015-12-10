@@ -1,31 +1,20 @@
 ----------------------------------------------------------------------------------
--- Engineer: drxzclx@gmail.com
+-- Company: AGH University of Science and Technology
+-- Engineer: Dawid Dworak, Mateusz Owczarek
 -- 
--- Create Date:    21:43:14 02/02/2015 
--- Design Name:    SPI driver for WS2801 led strings
--- Module Name:    spiout - Behavioral 
--- Project Name: 	 Neppielight
--- Additional Comments: 
---
+-- Module Name:  spiout - Behavioral 
+-- Project Name: flashinglights
+-- Target Devices:  XC6SLX9
+-- Description: SPI output for RGB leds
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
-
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx primitives in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 
 entity spiout is
     Port ( clk50 : in  STD_LOGIC;
-           data : in std_logic_vector(0 to 24*25-1); -- MSB first
+           data : in std_logic_vector(0 to 24*25-1); --25 LED * 3 RGB * 8B
            MOSI : out  STD_LOGIC;
            SCK : out  STD_LOGIC);
 end spiout;
@@ -47,8 +36,8 @@ process(clk50,sck_counter,sck_enable)
 		
 process(sck_s, sck_enable)
 	begin
-		-- Assert MOSI on the falling edge
-		-- So it can be sampled by the WS2801 on the rising edge.
+		-- MOSI on falling edge
+		-- it can be sampled by the WS2801 on the rising edge.
 		if (rising_edge(sck_s)) then
 			if wrcnt <= 599 then
 				MOSI <= data(to_integer(unsigned(wrcnt)));			

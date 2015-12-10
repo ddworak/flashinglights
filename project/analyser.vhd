@@ -1,69 +1,61 @@
 ----------------------------------------------------------------------------------
--- Engineer: drxzclx@gmail.com
+-- Company: AGH University of Science and Technology
+-- Engineer: Dawid Dworak, Mateusz Owczarek
 -- 
--- Create Date:    22:35:50 01/09/2015 
--- Design Name: 	HDMI block averager
--- Module Name:     - Behavioral 
--- Project Name: 	Neppielight
+-- Module Name:  analyser - Behavioral 
+-- Project Name: flashinglights
+-- Target Devices:  XC6SLX9
+-- Description: Color analyser generating framebuffers for RGB leds
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-entity averager is
+entity analyser is
     Port ( 
       clk_pixel : IN std_logic;
-      --
 		i_red     : IN std_logic_vector(7 downto 0);
 		i_green   : IN std_logic_vector(7 downto 0);
 		i_blue    : IN std_logic_vector(7 downto 0);
 		i_blank   : IN std_logic;
 		i_hsync   : IN std_logic;
 		i_vsync   : IN std_logic;          
-      --
-		framebuffer : OUT std_logic_vector(0 to 25*24-1);
+
+		framebuffer : OUT std_logic_vector(0 to 25*24-1); --25 LED * 3 RGB * 8B
+		
 		o_red     : OUT std_logic_vector(7 downto 0);
 		o_green   : OUT std_logic_vector(7 downto 0);
 		o_blue    : OUT std_logic_vector(7 downto 0);
 		o_blank   : OUT std_logic;
 		o_hsync   : OUT std_logic;
 		o_vsync   : OUT std_logic);  
-end averager;
+end analyser;
 
-architecture Behavioral of averager is
+architecture Behavioral of analyser is
 
-   -------------------------
-   -- Part of the pipeline
-   -------------------------
-	signal a_red     : std_logic_vector(7 downto 0);
-	signal a_green   : std_logic_vector(7 downto 0);
-	signal a_blue    : std_logic_vector(7 downto 0);
-	signal a_blank   : std_logic;
-	signal a_hsync   : std_logic;
-	signal a_vsync   : std_logic;  
+   
+   signal red     : std_logic_vector(7 downto 0);
+	signal green   : std_logic_vector(7 downto 0);
+	signal blue    : std_logic_vector(7 downto 0);
+	signal blank   : std_logic;
+	signal hsync   : std_logic;
+	signal vsync   : std_logic;  
 
-   -------------------------------
-   -- Counters for screen position   
-   -------------------------------
+   --screen position   
    signal x : STD_LOGIC_VECTOR (11 downto 0);
    signal y : STD_LOGIC_VECTOR (11 downto 0);
 
-	constant nblocks : integer := 25;	
+	constant blocks : integer := 25;	
 
-   -- signal pixel : std_logic_vector(23 downto 0) := (others => '0'); 
-   type accumulator_type is array (0 to nblocks-1,0 to 3) of std_logic_vector(21 downto 0);
-   signal accumulator : accumulator_type; 
-	--signal blocknr : integer range 0 to 10;
+   type t_accumulator is array (0 to blocks-1, 0 to 3) of std_logic_vector(21 downto 0);
+   signal accumulator : t_accumulator; 
 	
-	type blockcoords_type is array (0 to nblocks-1) of integer;
-	-- Due to the details of the construction, we start in the lower left corner
-	-- and work our way clockwise.
-	-- Laterally, we've got more leds than pixels, so we'll have partially verlapping boxes.
-	constant startx : blockcoords_type := (  0,  0,  0,  0,  0,0,144,288,432,576,720,864,1008,1152,1152,1152,1152,1152,1152,987,823,658,494,329,164);
-	constant starty : blockcoords_type := (592,472,356,238,118,0,  0,  0,  0,  0,  0,  0,   0,   0, 118, 238, 356, 472, 592,592,592,592,592,592,592);		
+	type t_coords is array (0 to blocks-1) of integer;
+	constant xstart : t_coords := (  0,  0,  0,  0,  0,0,144,288,432,576,720,864,1008,1152,1152,1152,1152,1152,1152,987,823,658,494,329,164);
+	constant ystart : t_coords := (592,472,356,238,118,0,  0,  0,  0,  0,  0,  0,   0,   0, 118, 238, 356, 472, 592,592,592,592,592,592,592);		
 	
-	type gamma_lut_type is array ( 0 to 255) of std_logic_vector(7 downto 0);
-	constant gamma_lut : gamma_lut_type := (
+	type gamma_type is array (0 to 255) of std_logic_vector(7 downto 0);
+	constant gamma_lut : gamma_type := (
 		X"01", X"01", X"01", X"01", X"01", X"01", X"01", X"01", X"01", X"01", X"01", X"01", X"01", X"01",
 		X"01", X"01", X"01", X"01", X"01", X"01", X"01", X"01", X"02", X"02", X"02", X"02", X"02", X"02",
 		X"02", X"02", X"02", X"02", X"02", X"03", X"03", X"03", X"03", X"03", X"03", X"03", X"03", X"04",
@@ -87,58 +79,56 @@ architecture Behavioral of averager is
 begin
 
 process(clk_pixel)
-	variable blockedge : std_logic := '0';
+	--variable edge : std_logic := '0'; --debug
    begin
       if rising_edge(clk_pixel) then
 				   					
-			for bn in 0 to nblocks-1 loop
-				if unsigned(x) >= startx(bn) and unsigned(x) < startx(bn)+128 and
-						unsigned(y) >= starty(bn) and unsigned(y) < starty(bn)+128 then
-					-- We are a part of block bn. Accumulate the color info.
-					accumulator(bn,0) <= std_logic_vector(unsigned(accumulator(bn,0)) + unsigned(a_red));
-					accumulator(bn,1) <= std_logic_vector(unsigned(accumulator(bn,1)) + unsigned(a_green));
-					accumulator(bn,2) <= std_logic_vector(unsigned(accumulator(bn,2)) + unsigned(a_blue));
+			for b in 0 to blocks-1 loop
+				if unsigned(x) >= xstart(b) and unsigned(x) < xstart(b)+128 and
+						unsigned(y) >= ystart(b) and unsigned(y) < ystart(b)+128 then
+					accumulator(b,0) <= std_logic_vector(unsigned(accumulator(b,0)) + unsigned(red));
+					accumulator(b,1) <= std_logic_vector(unsigned(accumulator(b,1)) + unsigned(green));
+					accumulator(b,2) <= std_logic_vector(unsigned(accumulator(b,2)) + unsigned(blue));
 				end if;
 			end loop;
 		
 
 			-- debug, mark blocks in blue
-			--blockedge := '0';
-			--for bn in 0 to nblocks-1 loop
-			--	if ((unsigned(x) = startx(bn) or unsigned(x) = startx(bn)+128) and (unsigned(y) >= starty(bn) and unsigned(y) <= starty(bn)+128)) or
-			--			((unsigned(y) = starty(bn) or unsigned(y) = starty(bn)+128) and (unsigned(x) >= startx(bn) and unsigned(x) <= startx(bn)+128)) then
-			--		blockedge := '1';
+			--edge := '0';
+			--for b in 0 to blocks-1 loop
+			--	if ((unsigned(x) = xstart(bn) or unsigned(x) = xstart(b)+128) and (unsigned(y) >= ystart(b) and unsigned(y) <= ystart(b)+128)) or
+			--			((unsigned(y) = ystart(b) or unsigned(y) = ystart(b)+128) and (unsigned(x) >= xstart(b) and unsigned(x) <= xstart(b)+128)) then
+			--		edge := '1';
 			--	end if;
 			--end loop;
          
-			--if blockedge = '0' then
-				o_red     <= a_red;
-				o_green   <= a_green;
-				o_blue    <= a_blue;
+			--if edge = '0' then
+				o_red     <= red;
+				o_green   <= green;
+				o_blue    <= blue;
 			--else
 			--	o_red     <= X"00";
 			--	o_green   <= X"00";
 			--	o_blue    <= X"FF";
 			--end if;
 			
-         o_blank   <= a_blank;
-         o_hsync   <= a_hsync;
-         o_vsync   <= a_vsync;
+         o_blank   <= blank;
+         o_hsync   <= hsync;
+         o_vsync   <= vsync;
 
-         a_red     <= i_red;
-         a_green   <= i_green;
-         a_blue    <= i_blue;
-         a_blank   <= i_blank;
-         a_hsync   <= i_hsync;
-         a_vsync   <= i_vsync;
+         red     <= i_red;
+         green   <= i_green;
+         blue    <= i_blue;
+         blank   <= i_blank;
+         hsync   <= i_hsync;
+         vsync   <= i_vsync;
 
 
-         -- Working out where we are in the screen..
-         if i_vsync /= a_vsync then
+         if i_vsync /= vsync then
             y <= (others => '0');
 							
 				if i_vsync = '1' then
-					for i in 0 to nblocks-1 loop
+					for i in 0 to blocks-1 loop
 						for c in 0 to 2 loop
 							framebuffer(c * 8 + i * 24 to i * 24 + c * 8 + 7) <= gamma_lut(to_integer(unsigned(accumulator(i,c)(21 downto 14))));
 							accumulator(i,c) <= (others => '0');
@@ -151,8 +141,7 @@ process(clk_pixel)
             x <= std_logic_vector(unsigned(x) + 1);
          end if;
 
-         -- Start of the blanking interval?
-         if a_blank = '0' and i_blank = '1' then
+         if blank = '0' and blank = '1' then
             y <= std_logic_vector(unsigned(y) + 1);
             x <= (others => '0');
          end if;
