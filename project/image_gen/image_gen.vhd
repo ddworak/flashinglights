@@ -6,7 +6,6 @@
 -- Project Name: flashinglights
 -- Target Devices:  XC6SLX9
 -- Description: Test 720p signal generator with optional animation
---
 ----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;

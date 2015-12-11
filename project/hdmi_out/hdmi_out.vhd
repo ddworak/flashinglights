@@ -102,13 +102,13 @@ architecture Behavioral of hdmi_out is
    signal clock_s     : STD_LOGIC;
 
 begin   
-   -- Send the pixels to the encoder
+
    c_blue <= vsync & hsync; -- HSYNC and VSYNC are encoded on the blue channel for transmission during the blanking period (XAPP460)
    tmds_encoder_red:   tmds_encoder PORT MAP(clk => clk_pixel, data => red,   c => c_red,   blank => blank, encoded => encoded_red);
    tmds_encoder_green: tmds_encoder PORT MAP(clk => clk_pixel, data => green, c => c_green, blank => blank, encoded => encoded_green);
    tmds_encoder_blue:  tmds_encoder PORT MAP(clk => clk_pixel, data => blue,  c => c_blue,  blank => blank, encoded => encoded_blue);
 
-   -- Then to a small FIFO
+-- FIFO
    fifo_in <= encoded_red & encoded_green & encoded_blue;
 
 	i_hdmi_out_clocks: hdmi_out_clocks PORT MAP(
@@ -134,7 +134,7 @@ out_fifo: tmds_out_fifo
     prog_empty => not_ready_yet
   );
    
-   -- Now at a x2 clock, send the data from the fifo to the serialisers
+--2x clock, send the data from the fifo to the serialisers
 process(clk_x2)
    begin
       if rising_edge(clk_x2) then
@@ -156,16 +156,16 @@ process(clk_x2)
       end if;
    end process;
 
-   -- The Serialisers
+--serializers
 output_serializer_r: output_serializer PORT MAP(clk_load => clk_x2, clk_output => clk_x10, strobe => serdes_strobe, ser_data => ser_in_red,   ser_output => red_s);
 output_serializer_g: output_serializer PORT MAP(clk_load => clk_x2, clk_output => clk_x10, strobe => serdes_strobe, ser_data => ser_in_green, ser_output => green_s);
 output_serializer_b: output_serializer PORT MAP(clk_load => clk_x2, clk_output => clk_x10, strobe => serdes_strobe, ser_data => ser_in_blue,  ser_output => blue_s);
 output_serializer_c: output_serializer PORT MAP(clk_load => clk_x2, clk_output => clk_x10, strobe => serdes_strobe, ser_data => ser_in_clock, ser_output => clock_s);
    
-    -- The output buffers/drivers
-OBUFDS_red   : OBUFDS port map ( O  => tmds_out_p(0), OB => tmds_out_n(0), I => red_s);
+--output buffers
+OBUFDS_blue  : OBUFDS port map ( O  => tmds_out_p(0), OB => tmds_out_n(0), I => blue_s);
 OBUFDS_green : OBUFDS port map ( O  => tmds_out_p(1), OB => tmds_out_n(1), I => green_s);
-OBUFDS_blue  : OBUFDS port map ( O  => tmds_out_p(2), OB => tmds_out_n(2), I => blue_s);
+OBUFDS_red   : OBUFDS port map ( O  => tmds_out_p(2), OB => tmds_out_n(2), I => red_s);
 OBUFDS_clock : OBUFDS port map ( O  => tmds_out_p(3), OB => tmds_out_n(3), I => clock_s);
 
 end Behavioral;

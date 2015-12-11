@@ -1,6 +1,6 @@
 # intermediate build files
 *.bgn
-*.bit
+project/*.bit
 *.bld
 *.cmd_log
 *.drc
